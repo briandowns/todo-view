@@ -17,7 +17,7 @@ type Show struct {
 func NewShow() cli.CommandFactory {
 	return func() (cli.Command, error) {
 		return &Show{
-			todoFormat: "TODO(<user>) <message> <weight> <timestamp>",
+			todoFormat: "TODO(<user>) <message> <timestamp> <weight>",
 		}, nil
 	}
 }
