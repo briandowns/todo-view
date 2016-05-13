@@ -35,3 +35,10 @@ briandowns      README.md        this is an example todo format         2016-05-
 briandowns      bin/todo-view    this is an example todo format         2016-05-13 18:54:00 +0000 UTC   4
 briandowns      command/show.go  this is an example todo format         2016-05-13 18:54:00 +0000 UTC   4 
 ```
+
+## Development
+
+```sh
+$ mkdir bin
+$ make
+```
