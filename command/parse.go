@@ -72,6 +72,8 @@ func (p *Parse) Synopsis() string {
 	return "Parse source and display results"
 }
 
+//TODO(briandowns) combine functionality to eliminate all the repitition 2016-05-13T16:14 1
+
 // byUser outputs the data by user
 func (p *Parse) byUser() {
 	todos, err := search()
@@ -192,6 +194,7 @@ func search() ([]Todo, error) {
 
 			if match != nil {
 				var todo Todo
+				//TODO(briandowns) have this controlled by a CLI flag 2016-05-13T16:14 2
 				/*fp, err := filepath.Abs(fh.Name())
 				if err != nil {
 					return nil, err
