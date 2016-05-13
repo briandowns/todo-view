@@ -4,6 +4,7 @@ import "time"
 
 // Format represents how timestamps show look
 var Format = "2006-01-02T15:04"
+var todoFormat = "TODO(<user>) <message> <timestamp> <weight>"
 
 // Todoer implements the functionality to view todos
 type Todoer interface {

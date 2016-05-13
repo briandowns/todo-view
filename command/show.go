@@ -10,14 +10,14 @@ import (
 
 // Show holds in the passed in configuration
 type Show struct {
-	todoFormat string
+	//todoFormat string
 }
 
 // NewShow creates a new instance of Delete
 func NewShow() cli.CommandFactory {
 	return func() (cli.Command, error) {
 		return &Show{
-			todoFormat: "TODO(<user>) <message> <timestamp> <weight>",
+		//todoFormat: "TODO(<user>) <message> <timestamp> <weight>",
 		}, nil
 	}
 }
@@ -64,7 +64,7 @@ func (s *Show) showFormat() {
 	fmt.Print("\ntodo-view todo format:\n\n")
 	w := NewTabWriter()
 
-	fmt.Fprintf(w, s.todoFormat+"\n\n")
+	fmt.Fprintf(w, todoFormat+"\n\n")
 	fmt.Fprintf(w, "Example:\n\n")
 	fmt.Fprintln(w, "TODO(briandowns) this is an example todo format 2016-05-13T18:54 4")
 
