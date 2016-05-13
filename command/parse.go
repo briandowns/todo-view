@@ -88,9 +88,8 @@ func (p *Parse) byUser() {
 	fmt.Print("\nTodo's by user:\n\n")
 	w := NewTabWriter()
 	defer w.Flush()
-	fmt.Fprintln(w, "User\tMessage\tTimestamp\tWeight")
 	for _, todo := range userTodos {
-		fmt.Fprintf(w, "%s\t%s\t%v\t%d\n", todo.User, todo.Message, todo.Timestamp, todo.Weight)
+		fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n", todo.User, todo.File, todo.Message, todo.Timestamp, todo.Weight)
 	}
 
 	fmt.Fprintf(w, "\n")
