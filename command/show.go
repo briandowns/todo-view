@@ -31,10 +31,11 @@ func (s *Show) Run(args []string) int {
 
 	// process the subcommand and it's options
 	switch args[0] {
-	case "weights":
-		s.showWeights()
 	case "format":
 		s.showFormat()
+
+	case "weights":
+		s.showWeights()
 	default:
 		fmt.Println("ERROR: invalid option for show\n")
 	}
@@ -47,8 +48,8 @@ func (s *Show) Help() string {
 	return `Usage: todo-view show <option> <arguments> 
   Show a resource
 Options:
-  weights            Display the todo-view weights
   format             Display the todo-view todo format
+  weights            Display the todo-view weights
   
 `
 }
@@ -56,6 +57,18 @@ Options:
 // Synopsis provides a brief description of the command
 func (s *Show) Synopsis() string {
 	return "Show a todo-view resource"
+}
+
+// showFormat outputs the format to be used for the TODO's
+func (s *Show) showFormat() {
+	fmt.Print("\ntodo-view todo format:\n\n")
+	w := NewTabWriter()
+
+	fmt.Fprintf(w, s.todoFormat+"\n\n")
+	fmt.Fprintf(w, "Example:\n\n")
+	fmt.Fprintln(w, "TODO(briandowns) this is an example todo format 2016-05-13T18:54 4")
+
+	w.Flush()
 }
 
 // showWeights shows all configured weights
@@ -74,14 +87,5 @@ func (s *Show) showWeights() {
 	}
 
 	fmt.Fprintf(w, "\n")
-	w.Flush()
-}
-
-func (s *Show) showFormat() {
-	fmt.Print("\ntodo-view todo format:\n\n")
-	w := NewTabWriter()
-
-	fmt.Fprintf(w, s.todoFormat+"\n")
-
 	w.Flush()
 }
