@@ -8,35 +8,62 @@ var todoFormat = "TODO(<user>) <message> <timestamp> <weight>"
 
 // Todoer implements the functionality to view todos
 type Todoer interface {
-	byName()
-	byFile()
-	byTimestamp()
-	byWeight()
+	User() string
+	File() string
+	Message() string
+	Timestamp() time.Time
+	Weight() int
 }
 
 // Todo represents a todo
 type Todo struct {
-	User      string
-	File      string
-	Message   string
-	Timestamp time.Time
-	Weight    int
+	user      string
+	file      string
+	message   string
+	timestamp time.Time
+	weight    int
 }
 
 // NewTodo creates a new reference of a todo
-func NewTodo(user, msg, ts, file string, weight int) (*Todo, error) {
-	t := &Todo{
-		User:    user,
-		File:    file,
-		Message: msg,
-		Weight:  weight,
+func NewTodo(u, m, ts, f string, w int) (*Todo, error) {
+	todo := &Todo{
+		user:    u,
+		file:    f,
+		message: m,
+		weight:  w,
 	}
 	timestamp, err := time.Parse(Format, ts)
 	if err != nil {
 		return nil, err
 	}
-	t.Timestamp = timestamp
-	return t, err
+	todo.timestamp = timestamp
+	return todo, err
+}
+
+func (t *Todo) User() string {
+	return t.user
+}
+
+func (t *Todo) File() string {
+	return t.file
+}
+
+func (t *Todo) Message() string {
+	return t.message
+}
+
+func (t *Todo) Timestamp() time.Time {
+	return t.timestamp
+}
+
+func (t *Todo) Weight() int {
+	return t.weight
+}
+
+type Swapper interface {
+	Len() int
+	Less(i, j int) bool
+	Swap(i, j int)
 }
 
 // UserTodos is a slice type made for easier sorting
@@ -49,7 +76,7 @@ func (u UserTodos) Len() int {
 
 // Less does a comparison of the 2 given arguments
 func (u UserTodos) Less(i, j int) bool {
-	return u[i].User < u[j].User
+	return u[i].user < u[j].user
 }
 
 // Swap switchs the place in the slice for the 2 given arguments
@@ -67,7 +94,7 @@ func (f FileTodos) Len() int {
 
 // Less does a comparison of the 2 given arguments
 func (f FileTodos) Less(i, j int) bool {
-	return f[i].File < f[j].File
+	return f[i].file < f[j].file
 }
 
 // Swap switchs the place in the slice for the 2 given arguments
@@ -85,7 +112,7 @@ func (t TimestampTodos) Len() int {
 
 // Less does a comparison of the 2 given arguments
 func (t TimestampTodos) Less(i, j int) bool {
-	return t[i].User < t[j].User
+	return t[i].user < t[j].user
 }
 
 // Swap switchs the place in the slice for the 2 given arguments
@@ -103,7 +130,7 @@ func (w WeightTodos) Len() int {
 
 // Less does a comparison of the 2 given arguments
 func (w WeightTodos) Less(i, j int) bool {
-	return w[i].User > w[j].User
+	return w[i].user > w[j].user
 }
 
 // Swap switchs the place in the slice for the 2 given arguments

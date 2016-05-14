@@ -20,8 +20,7 @@ import (
 var regex = regexp.MustCompile(`TODO\((?P<user>[a-z].+)\)(?P<msg>.+)(?P<timestamp>\d\d\d\d\D?\d\d\D?\d\d\D?\d\d\D?\d\d\D?(\d\d\.?(\d*))?(\d\d(:\d\d)?)?).(?P<weight>\d)`)
 
 // Parse type for command
-type Parse struct {
-}
+type Parse struct{}
 
 // NewParse creates a new Parse reference
 func NewParse() cli.CommandFactory {
@@ -72,7 +71,35 @@ func (p *Parse) Synopsis() string {
 	return "Parse source and display results"
 }
 
-//TODO(briandowns) combine functionality to eliminate all the repitition 2016-05-13T16:14 1
+// printOutput prints the given output to screen
+func printOutput(ot string, t Swapper) {
+	fmt.Printf("\nTodo's by %s:\n\n", ot)
+	w := NewTabWriter()
+	defer w.Flush()
+	switch todoerType := t.(type) {
+	case UserTodos:
+		for _, todo := range todoerType {
+			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+		}
+	case FileTodos:
+		for _, todo := range todoerType {
+			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+		}
+	case TimestampTodos:
+		for _, todo := range todoerType {
+			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+		}
+	case WeightTodos:
+		for _, todo := range todoerType {
+			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+		}
+	}
+	fmt.Fprintf(w, "\n")
+}
 
 // byUser outputs the data by user
 func (p *Parse) byUser() {
@@ -86,15 +113,7 @@ func (p *Parse) byUser() {
 
 	}
 	sort.Sort(userTodos)
-
-	fmt.Print("\nTodo's by user:\n\n")
-	w := NewTabWriter()
-	defer w.Flush()
-	for _, todo := range userTodos {
-		fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n", todo.User, todo.File, todo.Message, todo.Timestamp, todo.Weight)
-	}
-
-	fmt.Fprintf(w, "\n")
+	printOutput("user", userTodos)
 }
 
 // byFile outputs the data by file
@@ -109,15 +128,7 @@ func (p *Parse) byFile() {
 
 	}
 	sort.Sort(fileTodos)
-
-	fmt.Print("\nTodo's by file:\n\n")
-	w := NewTabWriter()
-	defer w.Flush()
-	for _, todo := range fileTodos {
-		fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n", todo.User, todo.File, todo.Message, todo.Timestamp, todo.Weight)
-	}
-
-	fmt.Fprintf(w, "\n")
+	printOutput("file", fileTodos)
 }
 
 // byDate outputs the data by date
@@ -132,15 +143,7 @@ func (p *Parse) byDate() {
 
 	}
 	sort.Sort(timestampTodos)
-
-	fmt.Print("\nTodo's by date:\n\n")
-	w := NewTabWriter()
-	defer w.Flush()
-	for _, todo := range timestampTodos {
-		fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n", todo.User, todo.File, todo.Message, todo.Timestamp, todo.Weight)
-	}
-
-	fmt.Fprintf(w, "\n")
+	printOutput("file", timestampTodos)
 }
 
 // byWeight outputs the data by weight
@@ -155,15 +158,7 @@ func (p *Parse) byWeight() {
 
 	}
 	sort.Sort(weightTodos)
-
-	fmt.Print("\nTodo's by weight:\n\n")
-	w := NewTabWriter()
-	defer w.Flush()
-	for _, todo := range weightTodos {
-		fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n", todo.User, todo.File, todo.Message, todo.Timestamp, todo.Weight)
-	}
-
-	fmt.Fprintf(w, "\n")
+	printOutput("file", weightTodos)
 }
 
 // search the directory path recursively
@@ -200,7 +195,7 @@ func search() ([]Todo, error) {
 					return nil, err
 				}
 				todo.File = fp*/
-				todo.File = file
+				todo.file = file
 				for i, name := range regex.SubexpNames() {
 					if i == 0 || name == "" {
 						continue
@@ -208,21 +203,21 @@ func search() ([]Todo, error) {
 
 					switch name {
 					case "user":
-						todo.User = match[i]
+						todo.user = match[i]
 					case "msg":
-						todo.Message = match[i]
+						todo.message = match[i]
 					case "timestamp":
 						ts, err := time.Parse(Format, match[i])
 						if err != nil {
 							return nil, err
 						}
-						todo.Timestamp = ts
+						todo.timestamp = ts
 					case "weight":
 						s, err := strconv.Atoi(match[i])
 						if err != nil {
 							return nil, err
 						}
-						todo.Weight = s
+						todo.weight = s
 					}
 				}
 				todos = append(todos, todo)
