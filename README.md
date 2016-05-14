@@ -24,6 +24,13 @@ todo-view weights:
 5       Not at all important
 ```
 
+## Sort By
+
+* User
+* File
+* Timestamp
+* Weight
+
 ## Usage
 
 ```sh

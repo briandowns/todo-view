@@ -110,7 +110,6 @@ func (p *Parse) byUser() {
 	userTodos := make(UserTodos, len(todos))
 	for i := 0; i <= len(todos)-1; i++ {
 		userTodos[i] = todos[i]
-
 	}
 	sort.Sort(userTodos)
 	printOutput("user", userTodos)
@@ -125,7 +124,6 @@ func (p *Parse) byFile() {
 	fileTodos := make(FileTodos, len(todos))
 	for i := 0; i <= len(todos)-1; i++ {
 		fileTodos[i] = todos[i]
-
 	}
 	sort.Sort(fileTodos)
 	printOutput("file", fileTodos)
@@ -140,7 +138,6 @@ func (p *Parse) byDate() {
 	timestampTodos := make(TimestampTodos, len(todos))
 	for i := 0; i <= len(todos)-1; i++ {
 		timestampTodos[i] = todos[i]
-
 	}
 	sort.Sort(timestampTodos)
 	printOutput("file", timestampTodos)
@@ -224,6 +221,5 @@ func search() ([]Todo, error) {
 			}
 		}
 	}
-
 	return todos, nil
 }
