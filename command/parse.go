@@ -15,6 +15,14 @@ import (
 	"github.com/mitchellh/cli"
 )
 
+// Parser used for all parsing types
+type Parser interface {
+	byUser()
+	byFile()
+	byDate()
+	byWeight()
+}
+
 // regex holds the pattern necessary to match the todo in the
 // files parsed
 var regex = regexp.MustCompile(`TODO\((?P<user>[a-z].+)\)(?P<msg>.+)(?P<timestamp>\d\d\d\d\D?\d\d\D?\d\d\D?\d\d\D?\d\d\D?(\d\d\.?(\d*))?(\d\d(:\d\d)?)?).(?P<weight>\d)`)
@@ -72,27 +80,31 @@ func (p *Parse) Synopsis() string {
 }
 
 // printOutput prints the given output to screen
-func printOutput(ot string, t Swapper) {
+func printOutput(ot string, t sort.Interface) {
 	fmt.Printf("\nTodo's by %s:\n\n", ot)
 	w := NewTabWriter()
 	defer w.Flush()
 	switch todoerType := t.(type) {
 	case UserTodos:
+		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 		}
 	case FileTodos:
+		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 		}
 	case TimestampTodos:
+		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 		}
 	case WeightTodos:
+		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
@@ -111,7 +123,6 @@ func (p *Parse) byUser() {
 	for i := 0; i <= len(todos)-1; i++ {
 		userTodos[i] = todos[i]
 	}
-	sort.Sort(userTodos)
 	printOutput("user", userTodos)
 }
 
@@ -125,7 +136,6 @@ func (p *Parse) byFile() {
 	for i := 0; i <= len(todos)-1; i++ {
 		fileTodos[i] = todos[i]
 	}
-	sort.Sort(fileTodos)
 	printOutput("file", fileTodos)
 }
 
@@ -139,8 +149,7 @@ func (p *Parse) byDate() {
 	for i := 0; i <= len(todos)-1; i++ {
 		timestampTodos[i] = todos[i]
 	}
-	sort.Sort(timestampTodos)
-	printOutput("file", timestampTodos)
+	printOutput("date", timestampTodos)
 }
 
 // byWeight outputs the data by weight
@@ -154,8 +163,7 @@ func (p *Parse) byWeight() {
 		weightTodos[i] = todos[i]
 
 	}
-	sort.Sort(weightTodos)
-	printOutput("file", weightTodos)
+	printOutput("weight", weightTodos)
 }
 
 // search the directory path recursively

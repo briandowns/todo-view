@@ -60,12 +60,6 @@ func (t *Todo) Weight() int {
 	return t.weight
 }
 
-type Swapper interface {
-	Len() int
-	Less(i, j int) bool
-	Swap(i, j int)
-}
-
 // UserTodos is a slice type made for easier sorting
 type UserTodos []Todo
 
@@ -112,7 +106,7 @@ func (t TimestampTodos) Len() int {
 
 // Less does a comparison of the 2 given arguments
 func (t TimestampTodos) Less(i, j int) bool {
-	return t[i].user < t[j].user
+	return t[i].timestamp.Before(t[j].timestamp)
 }
 
 // Swap switchs the place in the slice for the 2 given arguments
@@ -130,7 +124,7 @@ func (w WeightTodos) Len() int {
 
 // Less does a comparison of the 2 given arguments
 func (w WeightTodos) Less(i, j int) bool {
-	return w[i].user > w[j].user
+	return w[i].weight < w[j].weight
 }
 
 // Swap switchs the place in the slice for the 2 given arguments
