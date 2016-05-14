@@ -33,14 +33,31 @@ todo-view weights:
 
 ## Usage
 
+### Parse By User
+
 ```sh
-➜  todo-view git:(master) ✗ bin/todo-view parse by-user
+➜  $ todo-view parse by-user
 
 Todo's by user:
 
 briandowns      README.md        this is an example todo format         2016-05-13 18:54:00 +0000 UTC   4
 briandowns      bin/todo-view    this is an example todo format         2016-05-13 18:54:00 +0000 UTC   4
 briandowns      command/show.go  this is an example todo format         2016-05-13 18:54:00 +0000 UTC   4 
+```
+
+### Export CSV
+
+Sorting in CSV isn't supported currently and I'm not sure it will be since whatever it's being imported to will most likely have that capability.
+
+```sh
+➜  $ todo-view export csv
+
+todo-view export: cvs
+
+briandowns,README.md,this is an example todo format,2016-05-13 18:54:00 +0000 UTC,4
+briandowns,bin/todo-view,this is an example todo format,2016-05-13 18:54:00 +0000 UTC,4
+briandowns,command/parse.go,have this controlled by a CLI flag,2016-05-13 16:14:00 +0000 UTC,2
+briandowns,command/show.go,this is an example todo format,2016-05-13 18:54:00 +0000 UTC,4
 ```
 
 ## Development
