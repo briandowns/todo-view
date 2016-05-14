@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/fatih/flags"
@@ -210,7 +211,7 @@ func search() ([]Todo, error) {
 					case "user":
 						todo.user = match[i]
 					case "msg":
-						todo.message = match[i]
+						todo.message = strings.TrimSpace(match[i])
 					case "timestamp":
 						ts, err := time.Parse(Format, match[i])
 						if err != nil {
