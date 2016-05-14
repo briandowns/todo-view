@@ -8,17 +8,13 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-// Show holds in the passed in configuration
-type Show struct {
-	//todoFormat string
-}
+// Show
+type Show struct{}
 
 // NewShow creates a new instance of Delete
 func NewShow() cli.CommandFactory {
 	return func() (cli.Command, error) {
-		return &Show{
-		//todoFormat: "TODO(<user>) <message> <timestamp> <weight>",
-		}, nil
+		return &Show{}, nil
 	}
 }
 
@@ -33,7 +29,6 @@ func (s *Show) Run(args []string) int {
 	switch args[0] {
 	case "format":
 		s.showFormat()
-
 	case "weights":
 		s.showWeights()
 	default:

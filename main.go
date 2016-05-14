@@ -29,6 +29,7 @@ func run() (int, error) {
 		Commands: map[string]cli.CommandFactory{
 			"parse":   command.NewParse(),
 			"show":    command.NewShow(),
+			"export":  command.NewExport(),
 			"version": command.NewVersion(todoViewVersion),
 		},
 	}
