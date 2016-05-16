@@ -78,6 +78,11 @@ func (u UserTodos) Swap(i, j int) {
 	u[i], u[j] = u[j], u[i]
 }
 
+// Reverse will reverse the order of elements in the slice
+func (u UserTodos) Reverse() {
+
+}
+
 // FileTodos is a slice type made for easier sorting
 type FileTodos []Todo
 

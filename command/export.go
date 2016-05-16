@@ -1,6 +1,7 @@
 package command
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -63,7 +64,8 @@ func (e *Export) csv() {
 		log.Fatalln(err)
 	}
 	for _, todo := range todos {
-		fmt.Fprintf(os.Stdout, "%s,%s,%s,%v,%d\n", todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+		fmt.Fprintf(os.Stdout, "%s,%s,%s,%v,%d\n",
+			todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 	}
 }
 
@@ -72,6 +74,16 @@ func (e *Export) json() {
 	fmt.Print("\ntodo-view export: json\n\n")
 	w := NewTabWriter()
 	defer w.Flush()
+	todos, err := search()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	m := make(map[string][]Todo)
+	m["todos"] = todos
+	b, err := json.Marshal(m["todos"][0])
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	fmt.Fprintf(w, "\n")
+	fmt.Fprintln(w, string(b))
 }

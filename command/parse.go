@@ -48,17 +48,44 @@ func (p *Parse) Run(args []string) int {
 	// process the subcommand and it's options
 	switch args[0] {
 	case "by-user":
-		p.byUser()
+		if len(args) == 2 {
+			switch args[1] {
+			case "-d":
+				p.byUser(false)
+				return 1
+			}
+		}
+		p.byUser(true)
 	case "by-file":
-		p.byFile()
+		if len(args) == 2 {
+			switch args[1] {
+			case "-d":
+				p.byFile(false)
+				return 1
+			}
+		}
+		p.byFile(true)
 	case "by-date":
-		p.byDate()
+		if len(args) == 2 {
+			switch args[1] {
+			case "-d":
+				p.byDate(false)
+				return 1
+			}
+		}
+		p.byDate(true)
 	case "by-weight":
-		p.byWeight()
+		if len(args) == 2 {
+			switch args[1] {
+			case "-d":
+				p.byWeight(false)
+				return 1
+			}
+		}
+		p.byWeight(true)
 	default:
 		fmt.Println("ERROR: invalid option for parse\n")
 	}
-
 	return 1
 }
 
@@ -67,10 +94,10 @@ func (p *Parse) Help() string {
 	return `Usage: todo-view parse <option> <arguments> 
   Parse a source tree
 Options:
-  by-user            Parse todo's by user
-  by-file            Parse todo's by file   
-  by-date            Parse todo's by date
-  by-weight          Parse todo's by weight
+  by-user     [-d decending]        Parse todo's by user
+  by-file     [-d decending]        Parse todo's by file   
+  by-date     [-d decending]        Parse todo's by date
+  by-weight   [-d decending]        Parse todo's by weight
   
 `
 }
@@ -87,25 +114,21 @@ func printOutput(ot string, t sort.Interface) {
 	defer w.Flush()
 	switch todoerType := t.(type) {
 	case UserTodos:
-		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 		}
 	case FileTodos:
-		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 		}
 	case TimestampTodos:
-		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
 		}
 	case WeightTodos:
-		sort.Sort(todoerType)
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
 				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
@@ -115,7 +138,7 @@ func printOutput(ot string, t sort.Interface) {
 }
 
 // byUser outputs the data by user
-func (p *Parse) byUser() {
+func (p *Parse) byUser(decending bool) {
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
@@ -124,11 +147,20 @@ func (p *Parse) byUser() {
 	for i := 0; i <= len(todos)-1; i++ {
 		userTodos[i] = todos[i]
 	}
-	printOutput("user", userTodos)
+	switch decending {
+	case true:
+		sort.Sort(userTodos)
+		printOutput("user", userTodos)
+		return
+	case false:
+		sort.Sort(sort.Reverse(userTodos))
+		printOutput("user", userTodos)
+		return
+	}
 }
 
 // byFile outputs the data by file
-func (p *Parse) byFile() {
+func (p *Parse) byFile(decending bool) {
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
@@ -137,11 +169,20 @@ func (p *Parse) byFile() {
 	for i := 0; i <= len(todos)-1; i++ {
 		fileTodos[i] = todos[i]
 	}
-	printOutput("file", fileTodos)
+	switch decending {
+	case true:
+		sort.Sort(fileTodos)
+		printOutput("file", fileTodos)
+		return
+	case false:
+		sort.Sort(sort.Reverse(fileTodos))
+		printOutput("file", fileTodos)
+		return
+	}
 }
 
 // byDate outputs the data by date
-func (p *Parse) byDate() {
+func (p *Parse) byDate(decending bool) {
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
@@ -150,11 +191,20 @@ func (p *Parse) byDate() {
 	for i := 0; i <= len(todos)-1; i++ {
 		timestampTodos[i] = todos[i]
 	}
-	printOutput("date", timestampTodos)
+	switch decending {
+	case true:
+		sort.Sort(timestampTodos)
+		printOutput("weight", timestampTodos)
+		return
+	case false:
+		sort.Sort(sort.Reverse(timestampTodos))
+		printOutput("date", timestampTodos)
+		return
+	}
 }
 
 // byWeight outputs the data by weight
-func (p *Parse) byWeight() {
+func (p *Parse) byWeight(decending bool) {
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
@@ -162,9 +212,17 @@ func (p *Parse) byWeight() {
 	weightTodos := make(WeightTodos, len(todos))
 	for i := 0; i <= len(todos)-1; i++ {
 		weightTodos[i] = todos[i]
-
 	}
-	printOutput("weight", weightTodos)
+	switch decending {
+	case true:
+		sort.Sort(weightTodos)
+		printOutput("weight", weightTodos)
+		return
+	case false:
+		sort.Sort(sort.Reverse(weightTodos))
+		printOutput("weight", weightTodos)
+		return
+	}
 }
 
 // search the directory path recursively
