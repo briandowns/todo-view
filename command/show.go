@@ -43,8 +43,8 @@ func (s *Show) Help() string {
 	return `Usage: todo-view show <option> <arguments> 
   Show a resource
 Options:
-  format             Display the todo-view todo format
-  weights            Display the todo-view weights
+  format             Display todo-view todo format
+  weights            Display todo-view weights
   
 `
 }

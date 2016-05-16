@@ -62,6 +62,22 @@ briandowns,command/parse.go,have this controlled by a CLI flag,2016-05-13 16:14:
 briandowns,command/show.go,this is an example todo format,2016-05-13 18:54:00 +0000 UTC,4
 ```
 
+### Export to Jira Import Format
+
+This is just CSV but formatted for import into Jira.  Jire requires a header to know how to match columns.
+
+```sh
+$ todo-view export jira
+
+todo-view export: jira
+
+Summary,Assignee,Reporter,Priority
+this is an example todo format,briandowns,briandowns,4
+this is an example todo format,briandowns,briandowns,4
+have this controlled by a CLI flag,briandowns,briandowns,2
+this is an example todo format,briandowns,briandowns,4
+```
+
 ## Development
 
 ```sh

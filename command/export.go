@@ -52,8 +52,9 @@ func (e *Export) Help() string {
 	return `Usage: todo-view export <option> <arguments> 
   Show a resource
 Options:
-  csv                Display the todo-view data in csv format
-  json               Display the todo-view data in json format
+  csv                Display todo-view data in csv format
+  jira               Display todo-view data in Jira import format
+  json               Display todo-view data in json format
   
 `
 }
@@ -105,44 +106,10 @@ func (e *Export) jira() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	fmt.Fprintln(os.Stdout, "Summary,Assignee,Reporter,Priority")
 	for _, todo := range todos {
 		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
 			todo.Message(), todo.User(), todo.User(), todo.Weight())
 	}
-
-	/*var t []Exporter
-	for _, todo := range todos {
-		nj := NewJira(todo.Message(), todo.User(), todo.Weight())
-		t = append(t, nj)
-	}
-	nj.Export()*/
-}
-
-// Jira holds the data necessary to export data in Jira format
-type Jira struct {
-	Header      string
-	Summary     string
-	Assignee    string
-	Reporter    string
-	IssueType   int
-	Status      string
-	Description string
-	Priority    int
-}
-
-// NewJira creates a new reference to a Jira type
-func NewJira(msg, user string, weight int) *Jira {
-	return &Jira{
-		Header:   "Summary,Assignee,Reporter,Priority",
-		Summary:  msg,
-		Assignee: user,
-		Reporter: user,
-		Priority: weight,
-	}
-}
-
-// Export prints out the Jira formatted data
-func (j *Jira) Export() {
-	fmt.Fprintln(os.Stdout, j.Header)
 }
