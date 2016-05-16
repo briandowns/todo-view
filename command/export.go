@@ -13,6 +13,11 @@ import (
 // Export
 type Export struct{}
 
+// Exporter is an interface with an export method
+type Exporter interface {
+	Export()
+}
+
 // NewExport creates a new instance of Delete
 func NewExport() cli.CommandFactory {
 	return func() (cli.Command, error) {
@@ -33,6 +38,8 @@ func (e *Export) Run(args []string) int {
 		e.csv()
 	case "json":
 		e.json()
+	case "jira":
+		e.jira()
 	default:
 		fmt.Println("ERROR: invalid option for show\n")
 	}
@@ -45,8 +52,9 @@ func (e *Export) Help() string {
 	return `Usage: todo-view export <option> <arguments> 
   Show a resource
 Options:
-  csv                Display the todo-view data in csv format
-  json               Display the todo-view data in json format
+  csv                Display todo-view data in csv format
+  jira               Display todo-view data in Jira import format
+  json               Display todo-view data in json format
   
 `
 }
@@ -74,16 +82,34 @@ func (e *Export) json() {
 	fmt.Print("\ntodo-view export: json\n\n")
 	w := NewTabWriter()
 	defer w.Flush()
+
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	m := make(map[string][]Todo)
 	m["todos"] = todos
+
 	b, err := json.Marshal(m["todos"][0])
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	fmt.Fprintln(w, string(b))
+}
+
+// jira exports the todo-view data in jira format
+func (e *Export) jira() {
+	fmt.Print("\ntodo-view export: jira\n\n")
+	todos, err := search()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Fprintln(os.Stdout, "Summary,Assignee,Reporter,Priority")
+	for _, todo := range todos {
+		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
+			todo.Message(), todo.User(), todo.User(), todo.Weight())
+	}
 }
