@@ -105,12 +105,18 @@ func (e *Export) jira() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	//var jira []Exporter
+	fmt.Fprintln(os.Stdout, "Summary,Assignee,Reporter,Priority")
 	for _, todo := range todos {
-		//jira = append(jira, NewJira(todo.Message(), todo.User(), todo.Weight()))
-		nj := NewJira(todo.Message(), todo.User(), todo.Weight())
-		nj.Export()
+		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
+			todo.Message(), todo.User(), todo.User(), todo.Weight())
 	}
+
+	/*var t []Exporter
+	for _, todo := range todos {
+		nj := NewJira(todo.Message(), todo.User(), todo.Weight())
+		t = append(t, nj)
+	}
+	nj.Export()*/
 }
 
 // Jira holds the data necessary to export data in Jira format
@@ -138,15 +144,5 @@ func NewJira(msg, user string, weight int) *Jira {
 
 // Export prints out the Jira formatted data
 func (j *Jira) Export() {
-	fmt.Print("\ntodo-view export: cvs\n\n")
-	todos, err := search()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Fprintf(os.Stdout, j.Header)
-	for _, todo := range todos {
-		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
-			todo.Message(), todo.User(), todo.User(), todo.Weight())
-	}
-
+	fmt.Fprintln(os.Stdout, j.Header)
 }
