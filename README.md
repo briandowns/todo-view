@@ -24,7 +24,7 @@ todo-view weights:
 5       Not at all important
 ```
 
-## Sort By
+## Sorting
 
 * User
 * File
@@ -35,7 +35,7 @@ todo-view weights:
 
 By issuing the parse sub-command, you can view the todo data from all source files under the root that the command was run in.  If the `-d` flag issued, the output will be displayed in decending order rather than the default ascending order.
 
-### Parse By User
+### Sort By User
 
 ```sh
 ➜  $ todo-view parse by-user
