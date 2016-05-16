@@ -73,7 +73,7 @@ func (e *Export) csv() {
 	}
 	for _, todo := range todos {
 		fmt.Fprintf(os.Stdout, "%s,%s,%s,%v,%d\n",
-			todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+			todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Priority())
 	}
 }
 
@@ -110,6 +110,6 @@ func (e *Export) jira() {
 	fmt.Fprintln(os.Stdout, "Summary,Assignee,Reporter,Priority")
 	for _, todo := range todos {
 		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
-			todo.Message(), todo.User(), todo.User(), todo.Weight())
+			todo.Message(), todo.User(), todo.User(), todo.Priority())
 	}
 }

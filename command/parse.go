@@ -21,12 +21,12 @@ type Parser interface {
 	byUser()
 	byFile()
 	byDate()
-	byWeight()
+	byPriority()
 }
 
 // regex holds the pattern necessary to match the todo in the
 // files parsed
-var regex = regexp.MustCompile(`TODO\((?P<user>[a-z].+)\)(?P<msg>.+)(?P<timestamp>\d\d\d\d\D?\d\d\D?\d\d\D?\d\d\D?\d\d\D?(\d\d\.?(\d*))?(\d\d(:\d\d)?)?).(?P<weight>\d)`)
+var regex = regexp.MustCompile(`TODO\((?P<user>[a-z].+)\)(?P<msg>.+)(?P<timestamp>\d\d\d\d\D?\d\d\D?\d\d\D?\d\d\D?\d\d\D?(\d\d\.?(\d*))?(\d\d(:\d\d)?)?).(?P<priority>\d)`)
 
 // Parse type for command
 type Parse struct{}
@@ -74,15 +74,15 @@ func (p *Parse) Run(args []string) int {
 			}
 		}
 		p.byDate(true)
-	case "by-weight":
+	case "by-priority":
 		if len(args) == 2 {
 			switch args[1] {
 			case "-d":
-				p.byWeight(false)
+				p.byPriority(false)
 				return 1
 			}
 		}
-		p.byWeight(true)
+		p.byPriority(true)
 	default:
 		fmt.Println("ERROR: invalid option for parse\n")
 	}
@@ -97,7 +97,7 @@ Options:
   by-user     [-d decending]        Parse todo's by user
   by-file     [-d decending]        Parse todo's by file   
   by-date     [-d decending]        Parse todo's by date
-  by-weight   [-d decending]        Parse todo's by weight
+  by-priority   [-d decending]        Parse todo's by priority
   
 `
 }
@@ -116,22 +116,22 @@ func printOutput(ot string, t sort.Interface) {
 	case UserTodos:
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
-				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Priority())
 		}
 	case FileTodos:
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
-				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Priority())
 		}
 	case TimestampTodos:
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
-				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Priority())
 		}
-	case WeightTodos:
+	case PriorityTodos:
 		for _, todo := range todoerType {
 			fmt.Fprintf(w, "%s\t%s\t%s\t%v\t%d\n",
-				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Weight())
+				todo.User(), todo.File(), todo.Message(), todo.Timestamp(), todo.Priority())
 		}
 	}
 	fmt.Fprintf(w, "\n")
@@ -194,7 +194,7 @@ func (p *Parse) byDate(decending bool) {
 	switch decending {
 	case true:
 		sort.Sort(timestampTodos)
-		printOutput("weight", timestampTodos)
+		printOutput("priority", timestampTodos)
 		return
 	case false:
 		sort.Sort(sort.Reverse(timestampTodos))
@@ -203,24 +203,24 @@ func (p *Parse) byDate(decending bool) {
 	}
 }
 
-// byWeight outputs the data by weight
-func (p *Parse) byWeight(decending bool) {
+// byPriority outputs the data by priority
+func (p *Parse) byPriority(decending bool) {
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
 	}
-	weightTodos := make(WeightTodos, len(todos))
+	priorityTodos := make(PriorityTodos, len(todos))
 	for i := 0; i <= len(todos)-1; i++ {
-		weightTodos[i] = todos[i]
+		priorityTodos[i] = todos[i]
 	}
 	switch decending {
 	case true:
-		sort.Sort(weightTodos)
-		printOutput("weight", weightTodos)
+		sort.Sort(priorityTodos)
+		printOutput("priority", priorityTodos)
 		return
 	case false:
-		sort.Sort(sort.Reverse(weightTodos))
-		printOutput("weight", weightTodos)
+		sort.Sort(sort.Reverse(priorityTodos))
+		printOutput("priority", priorityTodos)
 		return
 	}
 }
@@ -276,12 +276,12 @@ func search() ([]Todo, error) {
 							return nil, err
 						}
 						todo.timestamp = ts
-					case "weight":
+					case "priority":
 						s, err := strconv.Atoi(match[i])
 						if err != nil {
 							return nil, err
 						}
-						todo.weight = s
+						todo.priority = s
 					}
 				}
 				todos = append(todos, todo)

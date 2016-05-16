@@ -29,8 +29,8 @@ func (s *Show) Run(args []string) int {
 	switch args[0] {
 	case "format":
 		s.showFormat()
-	case "weights":
-		s.showWeights()
+	case "priorities":
+		s.showPriorities()
 	default:
 		fmt.Println("ERROR: invalid option for show\n")
 	}
@@ -43,8 +43,8 @@ func (s *Show) Help() string {
 	return `Usage: todo-view show <option> <arguments> 
   Show a resource
 Options:
-  format             Display todo-view todo format
-  weights            Display todo-view weights
+  format             Display todo-view format
+  priorities         Display todo-view priorities
   
 `
 }
@@ -66,19 +66,19 @@ func (s *Show) showFormat() {
 	w.Flush()
 }
 
-// showWeights shows all configured weights
-func (s *Show) showWeights() {
-	fmt.Print("\ntodo-view weights:\n\n")
+// showPriorities shows all configured priorities
+func (s *Show) showPriorities() {
+	fmt.Print("\ntodo-view priorities:\n\n")
 	w := NewTabWriter()
 
 	var keys []int
-	for k := range Weights {
+	for k := range Priorities {
 		keys = append(keys, k)
 	}
 	sort.Ints(keys)
 
 	for _, k := range keys {
-		fmt.Fprintf(w, "%d\t%s\n", k, Weights[k])
+		fmt.Fprintf(w, "%d\t%s\n", k, Priorities[k])
 	}
 
 	fmt.Fprintf(w, "\n")

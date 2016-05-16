@@ -4,7 +4,7 @@ import "time"
 
 // Format represents how timestamps show look
 var Format = "2006-01-02T15:04"
-var todoFormat = "TODO(<user>) <message> <timestamp> <weight>"
+var todoFormat = "TODO(<user>) <message> <timestamp> <priority>"
 
 // Todoer implements the functionality to view todos
 type Todoer interface {
@@ -12,7 +12,7 @@ type Todoer interface {
 	File() string
 	Message() string
 	Timestamp() time.Time
-	Weight() int
+	priority() int
 }
 
 // Todo represents a todo
@@ -21,16 +21,16 @@ type Todo struct {
 	file      string
 	message   string
 	timestamp time.Time
-	weight    int
+	priority  int
 }
 
 // NewTodo creates a new reference of a todo
 func NewTodo(u, m, ts, f string, w int) (*Todo, error) {
 	todo := &Todo{
-		user:    u,
-		file:    f,
-		message: m,
-		weight:  w,
+		user:     u,
+		file:     f,
+		message:  m,
+		priority: w,
 	}
 	timestamp, err := time.Parse(Format, ts)
 	if err != nil {
@@ -56,8 +56,8 @@ func (t *Todo) Timestamp() time.Time {
 	return t.timestamp
 }
 
-func (t *Todo) Weight() int {
-	return t.weight
+func (t *Todo) Priority() int {
+	return t.priority
 }
 
 // UserTodos is a slice type made for easier sorting
@@ -119,20 +119,20 @@ func (t TimestampTodos) Swap(i, j int) {
 	t[i], t[j] = t[j], t[i]
 }
 
-// WeightTodos is a slice type made for easier sorting
-type WeightTodos []Todo
+// PriorityTodos is a slice type made for easier sorting
+type PriorityTodos []Todo
 
 // Len gets the length of the slice
-func (w WeightTodos) Len() int {
+func (w PriorityTodos) Len() int {
 	return len(w)
 }
 
 // Less does a comparison of the 2 given arguments
-func (w WeightTodos) Less(i, j int) bool {
-	return w[i].weight < w[j].weight
+func (w PriorityTodos) Less(i, j int) bool {
+	return w[i].priority < w[j].priority
 }
 
 // Swap switchs the place in the slice for the 2 given arguments
-func (w WeightTodos) Swap(i, j int) {
+func (w PriorityTodos) Swap(i, j int) {
 	w[i], w[j] = w[j], w[i]
 }
