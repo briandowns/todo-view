@@ -13,6 +13,11 @@ import (
 // Export
 type Export struct{}
 
+// Exporter is an interface with an export method
+type Exporter interface {
+	Export()
+}
+
 // NewExport creates a new instance of Delete
 func NewExport() cli.CommandFactory {
 	return func() (cli.Command, error) {
@@ -33,6 +38,8 @@ func (e *Export) Run(args []string) int {
 		e.csv()
 	case "json":
 		e.json()
+	case "jira":
+		e.jira()
 	default:
 		fmt.Println("ERROR: invalid option for show\n")
 	}
@@ -74,16 +81,72 @@ func (e *Export) json() {
 	fmt.Print("\ntodo-view export: json\n\n")
 	w := NewTabWriter()
 	defer w.Flush()
+
 	todos, err := search()
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	m := make(map[string][]Todo)
 	m["todos"] = todos
+
 	b, err := json.Marshal(m["todos"][0])
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	fmt.Fprintln(w, string(b))
+}
+
+// jira exports the todo-view data in jira format
+func (e *Export) jira() {
+	fmt.Print("\ntodo-view export: jira\n\n")
+	todos, err := search()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	//var jira []Exporter
+	for _, todo := range todos {
+		//jira = append(jira, NewJira(todo.Message(), todo.User(), todo.Weight()))
+		nj := NewJira(todo.Message(), todo.User(), todo.Weight())
+		nj.Export()
+	}
+}
+
+// Jira holds the data necessary to export data in Jira format
+type Jira struct {
+	Header      string
+	Summary     string
+	Assignee    string
+	Reporter    string
+	IssueType   int
+	Status      string
+	Description string
+	Priority    int
+}
+
+// NewJira creates a new reference to a Jira type
+func NewJira(msg, user string, weight int) *Jira {
+	return &Jira{
+		Header:   "Summary,Assignee,Reporter,Priority",
+		Summary:  msg,
+		Assignee: user,
+		Reporter: user,
+		Priority: weight,
+	}
+}
+
+// Export prints out the Jira formatted data
+func (j *Jira) Export() {
+	fmt.Print("\ntodo-view export: cvs\n\n")
+	todos, err := search()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Fprintf(os.Stdout, j.Header)
+	for _, todo := range todos {
+		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
+			todo.Message(), todo.User(), todo.User(), todo.Weight())
+	}
+
 }
