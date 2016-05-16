@@ -27,3 +27,4 @@ _testmain.go
 
 bin/*
 todo-view_*
+.DS_Store
