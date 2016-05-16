@@ -12,10 +12,10 @@ Example:
 TODO(briandowns) this is an example todo format 2016-05-13T18:54 4
 ```
 
-## Weighting
+## Priorities
 
 ```sh
-todo-view weights:
+todo-view priorities:
 
 1       Extremely important
 2       Somewhat important
@@ -29,7 +29,7 @@ todo-view weights:
 * User
 * File
 * Timestamp
-* Weight
+* Priority
 
 ## Usage
 
