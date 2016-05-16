@@ -26,3 +26,4 @@ _testmain.go
 *.prof
 
 bin/*
+todo-view_*
