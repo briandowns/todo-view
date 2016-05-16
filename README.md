@@ -33,6 +33,8 @@ todo-view weights:
 
 ## Usage
 
+By issuing the parse sub-command, you can view the todo data from all source files under the root that the command was run in.  If the `-d` flag issued, the output will be displayed in decending order rather than the default ascending order.
+
 ### Parse By User
 
 ```sh
