@@ -8,7 +8,7 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-// Show
+// Show represents the show command
 type Show struct{}
 
 // NewShow creates a new instance of Delete
@@ -32,7 +32,7 @@ func (s *Show) Run(args []string) int {
 	case "priorities":
 		s.showPriorities()
 	default:
-		fmt.Println("ERROR: invalid option for show\n")
+		fmt.Print("ERROR: invalid option for show\n\n")
 	}
 
 	return 1
@@ -42,6 +42,7 @@ func (s *Show) Run(args []string) int {
 func (s *Show) Help() string {
 	return `Usage: todo-view show <option> <arguments> 
   Show a resource
+  
 Options:
   format             Display todo-view format
   priorities         Display todo-view priorities
