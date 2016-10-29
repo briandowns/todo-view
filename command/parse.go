@@ -245,13 +245,8 @@ func search() ([]Todo, error) {
 
 			if match != nil {
 				var todo Todo
-				//TODO(briandowns) have this controlled by a CLI flag 2016-05-13T16:14 2
-				/*fp, err := filepath.Abs(fh.Name())
-				if err != nil {
-					return nil, err
-				}
-				todo.File = fp*/
 				todo.file = file
+
 				for i, name := range regex.SubexpNames() {
 					if i == 0 || name == "" {
 						continue

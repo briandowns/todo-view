@@ -40,22 +40,27 @@ func NewTodo(u, m, ts, f string, w int) (*Todo, error) {
 	return todo, err
 }
 
+// User returns the user value
 func (t *Todo) User() string {
 	return t.user
 }
 
+// File returns the file value
 func (t *Todo) File() string {
 	return t.file
 }
 
+// Message returns the message value
 func (t *Todo) Message() string {
 	return t.message
 }
 
+// Timestamp returns the timestamp value
 func (t *Todo) Timestamp() time.Time {
 	return t.timestamp
 }
 
+// Priority returns the priority value
 func (t *Todo) Priority() int {
 	return t.priority
 }
