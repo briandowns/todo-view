@@ -16,14 +16,6 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-// Parser used for all parsing types
-type Parser interface {
-	byUser()
-	byFile()
-	byDate()
-	byPriority()
-}
-
 // regex holds the pattern necessary to match the todo in the
 // files parsed
 var regex = regexp.MustCompile(`TODO\((?P<user>[a-z].+)\)(?P<msg>.+)(?P<timestamp>\d\d\d\d\D?\d\d\D?\d\d\D?\d\d\D?\d\d\D?(\d\d\.?(\d*))?(\d\d(:\d\d)?)?).(?P<priority>\d)`)
@@ -84,7 +76,7 @@ func (p *Parse) Run(args []string) int {
 		}
 		p.byPriority(true)
 	default:
-		fmt.Println("ERROR: invalid option for parse\n")
+		fmt.Print("ERROR: invalid option for parse\n\n")
 	}
 	return 1
 }
@@ -93,10 +85,11 @@ func (p *Parse) Run(args []string) int {
 func (p *Parse) Help() string {
 	return `Usage: todo-view parse <option> <arguments> 
   Parse a source tree
+  
 Options:
-  by-user     [-d decending]        Parse todo's by user
-  by-file     [-d decending]        Parse todo's by file   
-  by-date     [-d decending]        Parse todo's by date
+  by-user       [-d decending]        Parse todo's by user
+  by-file       [-d decending]        Parse todo's by file   
+  by-date       [-d decending]        Parse todo's by date
   by-priority   [-d decending]        Parse todo's by priority
   
 `
@@ -242,7 +235,6 @@ func search() ([]Todo, error) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		defer fh.Close()
 
 		fs := bufio.NewScanner(fh)
 
@@ -286,6 +278,7 @@ func search() ([]Todo, error) {
 				}
 				todos = append(todos, todo)
 			}
+			fh.Close()
 		}
 	}
 	return todos, nil

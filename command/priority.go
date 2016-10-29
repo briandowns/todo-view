@@ -1,5 +1,7 @@
 package command
 
+// Priorities represents the group of priorities TODO-View
+// represents
 var Priorities = map[int]string{
 	5: "Not at all important",
 	4: "Slightly important",

@@ -10,13 +10,13 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-// Export
-type Export struct{}
-
 // Exporter is an interface with an export method
 type Exporter interface {
 	Export()
 }
+
+// Export is used for a command base
+type Export struct{}
 
 // NewExport creates a new instance of Delete
 func NewExport() cli.CommandFactory {
@@ -41,7 +41,7 @@ func (e *Export) Run(args []string) int {
 	case "jira":
 		e.jira()
 	default:
-		fmt.Println("ERROR: invalid option for show\n")
+		fmt.Printf("ERROR: invalid option for show\n\n")
 	}
 
 	return 1
@@ -51,6 +51,7 @@ func (e *Export) Run(args []string) int {
 func (e *Export) Help() string {
 	return `Usage: todo-view export <option> <arguments> 
   Show a resource
+  
 Options:
   csv                Display todo-view data in csv format
   jira               Display todo-view data in Jira import format
