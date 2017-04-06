@@ -40,6 +40,8 @@ func (e *Export) Run(args []string) int {
 		e.json()
 	case "jira":
 		e.jira()
+	case "jira-table":
+		e.jiraTable()
 	default:
 		fmt.Printf("ERROR: invalid option for show\n\n")
 	}
@@ -56,6 +58,7 @@ Options:
   csv                Display todo-view data in csv format
   jira               Display todo-view data in Jira import format
   json               Display todo-view data in json format
+  jira-table         Display todo-view data in Jira table format for a comment
   
 `
 }
@@ -111,6 +114,21 @@ func (e *Export) jira() {
 	fmt.Fprintln(os.Stdout, "Summary,Assignee,Reporter,Priority")
 	for _, todo := range todos {
 		fmt.Fprintf(os.Stdout, "%s,%s,%s,%d\n",
+			todo.Message(), todo.User(), todo.User(), todo.Priority())
+	}
+}
+
+// jiraTable exports the todo-view data that can be used as a table in a Jira comment
+func (e *Export) jiraTable() {
+	fmt.Print("\ntodo-view export: jira-table\n\n")
+	todos, err := search()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Fprintln(os.Stdout, "||Summary||Assignee||Reporter||Priority||")
+	for _, todo := range todos {
+		fmt.Fprintf(os.Stdout, "|%s|%s|%s|%d|\n",
 			todo.Message(), todo.User(), todo.User(), todo.Priority())
 	}
 }

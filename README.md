@@ -78,6 +78,20 @@ have this controlled by a CLI flag,briandowns,briandowns,2
 this is an example todo format,briandowns,briandowns,4
 ```
 
+### Export to Jira Table Comment Notation
+
+A table can be added to a Jira comment with this notation.  Output includes headers.
+
+```sh
+$ todo-view export jira-table
+
+todo-view export: jira-table
+
+||Summary||Assignee||Reporter||Priority||
+|this is an example todo format|briandowns|briandowns|4|
+|this is an example todo format|briandowns|briandowns|4|
+```
+
 ## Development
 
 ```sh
