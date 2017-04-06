@@ -64,7 +64,7 @@ briandowns,command/show.go,this is an example todo format,2016-05-13 18:54:00 +0
 
 ### Export to Jira Import Format
 
-This is just CSV but formatted for import into Jira.  Jire requires a header to know how to match columns.
+This is just CSV but formatted for import into Jira.  Jira requires a header to know how to match columns.
 
 ```sh
 $ todo-view export jira
