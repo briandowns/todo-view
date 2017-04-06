@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	todoViewVersion = "0.1"
+	todoViewVersion = "0.2"
 	todoViewName    = "todo-view"
 )
 
@@ -30,6 +30,7 @@ func run() (int, error) {
 			"parse":   command.NewParse(),
 			"show":    command.NewShow(),
 			"export":  command.NewExport(),
+			"web":     command.NewWeb(),
 			"version": command.NewVersion(todoViewVersion),
 		},
 	}
