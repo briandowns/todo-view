@@ -74,7 +74,7 @@ briandowns,command/show.go,this is an example todo format,2016-05-13 18:54:00 +0
 
 ### Export to Jira Import Format
 
-This is just CSV but formatted for import into Jira.  Jire requires a header to know how to match columns.
+This is just CSV but formatted for import into Jira.  Jira requires a header to know how to match columns.
 
 ```sh
 $ todo-view export jira
@@ -86,6 +86,20 @@ this is an example todo format,briandowns,briandowns,4
 this is an example todo format,briandowns,briandowns,4
 have this controlled by a CLI flag,briandowns,briandowns,2
 this is an example todo format,briandowns,briandowns,4
+```
+
+### Export to Jira Table Comment Notation
+
+A table can be added to a Jira comment with this notation.  Output includes headers.
+
+```sh
+$ todo-view export jira-table
+
+todo-view export: jira-table
+
+||Summary||Assignee||Reporter||Priority||
+|this is an example todo format|briandowns|briandowns|4|
+|this is an example todo format|briandowns|briandowns|4|
 ```
 
 ## Development
