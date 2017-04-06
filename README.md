@@ -24,6 +24,16 @@ todo-view priorities:
 5       Not at all important
 ```
 
+## Web
+
+```sh
+todo-view web port 5000
+
+todo-view web:
+
+Serving on http://localhost:5000
+```
+
 ## Sorting
 
 * User
