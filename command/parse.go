@@ -273,8 +273,8 @@ func search() ([]Todo, error) {
 				}
 				todos = append(todos, todo)
 			}
-			fh.Close()
 		}
+		fh.Close()
 	}
 	return todos, nil
 }
